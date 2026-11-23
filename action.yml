@@ -1,7 +1,6 @@
 name: "cbom-guard PQC Scanner & CBOM Generator"
 description: >
-  Scan source code and X.509 certificates for Post-Quantum Cryptography (PQC) readiness,
-  export CycloneDX 1.6 CBOM and SARIF 2.1.0, and post hybrid-PQC PR remediation comments.
+  Automated Post-Quantum Cryptography (PQC) AST code scanner, CycloneDX 1.6 CBOM & SARIF 2.1.0 exporter with PR comments.
 author: "Corax CoLAB"
 branding:
   icon: "shield"
