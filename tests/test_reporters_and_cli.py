@@ -9,6 +9,7 @@ from typer.testing import CliRunner
 
 from cbom_guard.cli import app
 from cbom_guard.reporters.cyclonedx import generate_cyclonedx_cbom, validate_cyclonedx_cbom
+from cbom_guard.reporters.html import generate_html_report
 from cbom_guard.reporters.sarif import generate_sarif
 from cbom_guard.scanner.workspace import scan_path
 
@@ -118,3 +119,29 @@ def test_cli_version_json_github_output_and_missing_path(tmp_path: Path) -> None
 
     res_missing = runner.invoke(app, ["scan", str(tmp_path / "does_not_exist")])
     assert res_missing.exit_code == 2
+
+
+def test_html_dashboard_reporter_and_cli(tmp_path: Path) -> None:
+    result = scan_path(FIXTURES)
+    html_str = generate_html_report(result)
+    assert '<meta name="color-scheme" content="light dark">' in html_str
+    assert 'role="region"' in html_str
+    assert "X.509 Certificate Inventory" in html_str
+    assert "PY-CRYPTO-001" in html_str
+
+    html_file = tmp_path / "report.html"
+    res = runner.invoke(
+        app,
+        [
+            "scan",
+            str(FIXTURES / "python" / "vulnerable_crypto.py"),
+            "--html-out",
+            str(html_file),
+            "--quiet",
+            "--fail-on",
+            "none",
+        ],
+    )
+    assert res.exit_code == 0
+    assert html_file.exists()
+    assert "cbom-guard" in html_file.read_text(encoding="utf-8")

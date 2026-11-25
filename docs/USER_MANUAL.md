@@ -23,6 +23,7 @@ cbom-guard scan ./src \
 Available flags:
 - `--cbom-out <path>`: Write schema-validated CycloneDX 1.6 CBOM JSON.
 - `--sarif-out <path>`: Write SARIF 2.1.0 JSON for GitHub Code Scanning.
+- `--html-out <path>`: Write a self-contained, offline-ready HTML PQC readiness dashboard.
 - `--rules-dir <dir>`: Load additional or custom YAML rules from a directory.
 - `--fail-on <critical|warning|none>`: Exit non-zero if findings meet or exceed threshold (default: `critical`).
 - `--json`: Output full scan results as JSON to stdout.
