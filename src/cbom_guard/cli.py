@@ -12,6 +12,7 @@ from rich.table import Table
 from cbom_guard import __version__
 from cbom_guard.reporters.cyclonedx import generate_cyclonedx_cbom, validate_cyclonedx_cbom
 from cbom_guard.reporters.github_pr import post_pr_review_comments
+from cbom_guard.reporters.html import generate_html_report
 from cbom_guard.reporters.sarif import generate_sarif
 from cbom_guard.reporters.terminal import render_terminal_report
 from cbom_guard.scanner.rule_engine import RuleEngine
@@ -50,6 +51,9 @@ def scan(
     path: Path = typer.Argument(Path("."), help="File or directory to scan."),
     cbom_out: Path | None = typer.Option(None, "--cbom-out", help="Write CycloneDX 1.6 CBOM JSON."),
     sarif_out: Path | None = typer.Option(None, "--sarif-out", help="Write SARIF 2.1.0 JSON."),
+    html_out: Path | None = typer.Option(
+        None, "--html-out", help="Write self-contained HTML PQC readiness dashboard."
+    ),
     rules_dir: Path | None = typer.Option(None, "--rules-dir", help="Custom YAML rules directory."),
     fail_on: str = typer.Option(
         "critical",
@@ -89,6 +93,13 @@ def scan(
         sarif_out.write_text(sarif_json, encoding="utf-8")
         if not quiet and not json_out:
             console.print(f"[green]Wrote SARIF 2.1.0 report to {sarif_out}[/green]")
+
+    if html_out is not None:
+        html_doc = generate_html_report(result)
+        html_out.parent.mkdir(parents=True, exist_ok=True)
+        html_out.write_text(html_doc, encoding="utf-8")
+        if not quiet and not json_out:
+            console.print(f"[green]Wrote HTML dashboard report to {html_out}[/green]")
 
     if github_output is not None:
         with github_output.open("a", encoding="utf-8") as fh:

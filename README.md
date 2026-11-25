@@ -68,10 +68,11 @@ uv tool install cbom-guard
 ### Scan a Repository
 
 ```bash
-# Interactive terminal table + CycloneDX 1.6 CBOM + SARIF 2.1.0
+# Interactive terminal table + CycloneDX 1.6 CBOM + SARIF 2.1.0 + HTML Dashboard
 cbom-guard scan ./src \
   --cbom-out cbom.json \
   --sarif-out cbom-guard.sarif \
+  --html-out pqc-report.html \
   --fail-on critical
 
 # Machine-readable JSON output for CI pipelines
